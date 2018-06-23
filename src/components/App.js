@@ -1,39 +1,73 @@
-import React from 'react'
-import {
-  compose,
-  setDisplayName,
-  withStateHandlers,
-  lifecycle,
-  pure,
-} from 'recompose'
-import Contents from './Contents'
-import Button from './Button'
+import React, { Timeout } from 'react'
+import { compose, withStateHandlers, pure } from 'recompose'
+import fetchApi from '../libs/fetchApi'
 
-const Component = props => (
+const AsyncText = ({ id, ms }) => {
+  const data = fetchApi(id, ms)
+  console.log(
+    [
+      `${`0${new Date().getHours()}`.slice(-2)}`,
+      `${`0${new Date().getMinutes()}`.slice(-2)}`,
+      `${`0${new Date().getSeconds()}`.slice(-2)}`,
+    ].join(':'),
+    'Rendering AsyncText Component'
+  )
+  return <span>{data}</span>
+}
+
+const Loader = ({ ms, fallback, children }) => {
+  return (
+    <Timeout ms={ms}>
+      {didExpire => {
+        console.log(
+          [
+            `${`0${new Date().getHours()}`.slice(-2)}`,
+            `${`0${new Date().getMinutes()}`.slice(-2)}`,
+            `${`0${new Date().getSeconds()}`.slice(-2)}`,
+          ].join(':'),
+          'didExpire: ',
+          didExpire
+        )
+        return didExpire ? fallback : children
+      }}
+    </Timeout>
+  )
+}
+
+const App = props => (
   <React.Fragment>
-    <Contents {...props} />
-    <Button {...props} />
+    <h1>React Suspense Minimum</h1>
+    <div>
+      {props.isLoading && (
+        <React.Fragment>
+          <p>Requested ID</p>
+          <Loader ms={props.timeoutMs} fallback={<span>loading...</span>}>
+            <AsyncText id="1234" ms={props.waitMs} />
+          </Loader>
+        </React.Fragment>
+      )}
+      <p>
+        <button onClick={props.requestData}>Get ID</button>
+        <button onClick={props.reset}>reset</button>
+      </p>
+    </div>
   </React.Fragment>
 )
 
-const Enhance = compose(
-  setDisplayName('App'),
+const Enhancer = compose(
   withStateHandlers(
     {
-      text: '',
-      show: false,
+      waitMs: 2000,
+      timeoutMs: 5000,
+      showHello: false,
+      isLoading: false,
     },
     {
-      setText: () => t => ({ text: t }),
-      setShow: ({ show }) => () => ({ show: !show }),
+      requestData: () => () => ({ isLoading: true }),
+      reset: () => () => ({ isLoading: false }),
     }
   ),
-  lifecycle({
-    componentDidMount() {
-      this.props.setText('Hello React')
-    },
-  }),
   pure
 )
 
-export default Enhance(Component)
+export default Enhancer(App)

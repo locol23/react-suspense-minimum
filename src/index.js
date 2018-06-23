@@ -1,5 +1,10 @@
-import React from 'react'
+import React, { unstable_AsyncMode as AsyncMode } from 'react'
 import ReactDOM from 'react-dom'
 import App from './components/App'
 
-ReactDOM.render(<App />, document.getElementById('app'))
+ReactDOM.render(
+  <AsyncMode>
+    <App />
+  </AsyncMode>,
+  document.getElementById('app')
+)
