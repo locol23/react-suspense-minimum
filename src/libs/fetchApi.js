@@ -4,12 +4,12 @@ const cache = createCache()
 
 const wait = ms => new Promise(r => setTimeout(r, ms))
 
-const callApi = text => new Promise(r => r(text))
+const callApi = id => new Promise(r => r(`Your ID is ${id}`))
 
-const dataResource = createResource(([text, waitMs]) => {
-  return Promise.all([callApi(text), wait(waitMs)])
-}, ([text]) => text)
+const dataResource = createResource(([id, waitMs]) => {
+  return Promise.all([callApi(id), wait(waitMs)])
+}, ([id]) => id)
 
-const getData = (text, waitMs) => dataResource.read(cache, [text, waitMs])
+const getData = (id, waitMs) => dataResource.read(cache, [id, waitMs])
 
 export default getData
