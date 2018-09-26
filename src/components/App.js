@@ -4,33 +4,12 @@ import fetchApi from '../libs/fetchApi'
 
 const AsyncText = ({ id, ms }) => {
   const data = fetchApi(id, ms)
-  console.log(
-    [
-      `${`0${new Date().getHours()}`.slice(-2)}`,
-      `${`0${new Date().getMinutes()}`.slice(-2)}`,
-      `${`0${new Date().getSeconds()}`.slice(-2)}`,
-    ].join(':'),
-    'Rendering AsyncText Component'
-  )
   return <span>{data}</span>
 }
 
 const Loader = ({ ms, fallback, children }) => {
   return (
-    <Timeout ms={ms}>
-      {didExpire => {
-        console.log(
-          [
-            `${`0${new Date().getHours()}`.slice(-2)}`,
-            `${`0${new Date().getMinutes()}`.slice(-2)}`,
-            `${`0${new Date().getSeconds()}`.slice(-2)}`,
-          ].join(':'),
-          'didExpire: ',
-          didExpire
-        )
-        return didExpire ? fallback : children
-      }}
-    </Timeout>
+    <Timeout ms={ms}>{didExpire => (didExpire ? fallback : children)}</Timeout>
   )
 }
 
