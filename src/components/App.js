@@ -17,6 +17,10 @@ const App = props => (
   <React.Fragment>
     <h1>React Suspense Minimum</h1>
     <div>
+      <p>
+        <button onClick={props.requestData}>Get ID</button>
+        <button onClick={props.reset}>reset</button>
+      </p>
       {props.isLoading && (
         <React.Fragment>
           <p>Requested ID</p>
@@ -25,10 +29,6 @@ const App = props => (
           </Loader>
         </React.Fragment>
       )}
-      <p>
-        <button onClick={props.requestData}>Get ID</button>
-        <button onClick={props.reset}>reset</button>
-      </p>
     </div>
   </React.Fragment>
 )
