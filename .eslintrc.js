@@ -12,9 +12,10 @@ module.exports = {
   plugins: ['react'],
   rules: {
     quotes: [ERROR, 'single'],
-    'react/jsx-filename-extension': [WARN, { extensions: ['.js', '.jsx'] }],
+    "react/jsx-filename-extension": [WARN, { extensions: ['.js', '.jsx'] }],
     "react/prop-types": "off",
     "no-console": WARN,
+    "import/prefer-default-export": false,
     "prettier/prettier": [
       "error",
       {
